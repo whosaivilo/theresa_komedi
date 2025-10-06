@@ -5,9 +5,8 @@ use App\Http\Controllers\AuthControler;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\QuestionController;
-
-
-
+use App\Http\Controllers\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,5 +39,8 @@ Route::get('/pegawai', [PegawaiController::class, 'index']);
 Route::post('question/store', [QuestionController::class, 'store'])
 	->name('question.store');
 
+
 Route::get('/auth',[AuthControler::class, 'index']);
 Route::post('/auth/login', [AuthControler::class, 'login']);
+
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
