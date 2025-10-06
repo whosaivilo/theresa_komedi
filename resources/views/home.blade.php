@@ -8,9 +8,12 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
+     <img src="{{ asset('assets/images/download.jpg') }}" alt="Logo">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        body
+        {
+            font-family: 'OpenSans'
+;
         }
 
         .navbar-brand {
@@ -53,10 +56,11 @@
 </head>
 
 <body>
+    <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">My Laravel App</a>
+            <a class="navbar-brand font-custom" href="#">My Laravel App</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -176,15 +180,16 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="nama" value="{{old('nama')}}">
+                                <input type="text" class="form-control" name="nama" value="{{ old('nama') }}">
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                                <input type="text" class="form-control" name="email"
+                                    value="{{ old('email') }}">
                             </div>
                             <div class="mb-3">
                                 <label for="pertanyaan" class="form-label">Pertanyaan</label>
-                                <textarea class="form-control" name="pertanyaan" rows="4">{{old('pertanyaan')}}</textarea>
+                                <textarea class="form-control" name="pertanyaan" rows="4">{{ old('pertanyaan') }}</textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Kirim Pertanyaan</button>
                         </form>
