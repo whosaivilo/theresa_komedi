@@ -255,7 +255,7 @@
             </div>
         @endif
 
-        <form action="/auth/login" method="POST">
+        <form action=/auth/login method="POST">
             @csrf <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Masukkan Username" value="{{ old('username') }}">
@@ -277,9 +277,9 @@
                     <a href="#">Forgot password?</a>
                 </div>
             </div>
-            <button type="submit" class="sign-in-button">Sign in</button>
+            <button type="submit" class="sign-in-button">Regis</button>
         </form>
-        <p class="signup-link">Don't have an account? <a href="#">Sign up</a></p>
+        <p class="signup-link">Belum punya akun? <a href="#">Regis</a></p>
     </div>
 
     <script>

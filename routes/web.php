@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthControler;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DashboardController;
@@ -40,7 +41,21 @@ Route::post('question/store', [QuestionController::class, 'store'])
 	->name('question.store');
 
 
-Route::get('/auth',[AuthControler::class, 'index']);
-Route::post('/auth/login', [AuthControler::class, 'login']);
+// Route::get('/auth',[AuthControler::class, 'index']);
+// Route::post('/auth/login', [AuthControler::class, 'login']);
 
-Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+//Menampilkan form login
+Route::get('/auth', [AuthControler::class, 'index'])->name('auth');
+//Memproses form login (POST)
+Route::post('/auth/login', [AuthControler::class, 'login'])->name('auth.login');
+//Menampilkan form register (GET)
+Route::get('/auth/register', [AuthControler::class, 'daftar'])->name('auth.register');
+//Memproses form register (POST)
+Route::post('/auth/register', [AuthControler::class, 'register'])->name('auth.register.post');
+
+//Dashboard untuk admin
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+//Dashboard untuk guest
+Route::get('/guest', [GuestController::class, 'index'])->name('guest.dashboard');
