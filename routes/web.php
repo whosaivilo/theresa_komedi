@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Pelanggan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthControler;
 use App\Http\Controllers\HomeController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PelangganController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -59,3 +61,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.das
 
 //Dashboard untuk guest
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.dashboard');
+
+
+Route::resource('pelanggan', PelangganController::class);
