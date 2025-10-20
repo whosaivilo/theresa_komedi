@@ -21,7 +21,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- Primary Meta Tags -->
-    <title>Data Pelanggan</title>
+    <title>Form Tambah Pelanggan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="title" content="Volt Premium Bootstrap Dashboard - Forms">
     <meta name="author" content="Themesberg">
@@ -60,19 +60,23 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
+
     {{-- Start CSS --}}
     @include('layouts.admin.css')
-    {{-- End CSS --}}
-
 </head>
 
 <body>
 
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
-  @extends('layouts.admin.app')
+    @include('layouts.admin.sidebar')
 
-        {{-- Start Main Content --}}
+    <main class="content">
+
+        {{-- Header --}}
+        @include('layouts.admin.header')
+
+        {{-- Breadcrumb & Title --}}
         <div class="py-4">
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                 <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -86,86 +90,95 @@
                             </svg>
                         </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#">Pelanggan</a></li>
-
+                    <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Tambah User</li>
                 </ol>
             </nav>
             <div class="d-flex justify-content-between w-100 flex-wrap">
                 <div class="mb-3 mb-lg-0">
-                    <h1 class="h4">Data Pelanggan</h1>
-                    <p class="mb-0">List seluruh data pelanggan</p>
+                    <h1 class="h4">Tambah User</h1>
+                    <p class="mb-0">Form untuk menambahkan data user baru</p>
                 </div>
                 <div>
-                    <a href="{{ route('pelanggan.create') }}" class="btn btn-outline-warning">Tambah Pelanggan</a>
+                    <a href="{{ route('admin.user.index') }}" class="btn btn-primary">
+                        <i class="far fa-arrow-left me-1"></i> Kembali
+                    </a>
                 </div>
             </div>
         </div>
 
+        {{-- Form Section --}}
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card border-0 shadow components-section">
+                    <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-info">
+                                {!! session('success') !!}
+                            </div>
+                        @endif
 
+                        <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
 
-        <div class="card theme-settings bg-gray-800 theme-settings-expand" id="theme-settings-expand">
-            <div class="card-body bg-gray-800 text-white rounded-top p-3 py-2">
-                <span class="fw-bold d-inline-flex align-items-center h6">
-                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    Settings
-                </span>
-            </div>
-        </div>
+                            <div class="row mb-4">
+                                {{-- Name --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        id="name" name="name" value="{{ old('name', $user->name) }}"
+                                        placeholder="Enter full name" required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+                                {{-- Email --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="email">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                        id="email" name="email" value="{{ old('email', $user->email) }}"
+                                        placeholder="Enter email" required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-        <div class="card border-0 shadow mb-4">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id = "table-pelanggan" class="table table-centered table-nowrap mb-0 rounded">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="border-0 rounded-start">#</th>
-                                <th class="border-0">First name</th>
-                                <th class="border-0">Last name</th>
-                                <th class="border-0">Birthday</th>
-                                <th class="border-0">Gender</th>
-                                <th class="border-0">Email</th>
-                                <th class="border-0">Phone</th>
-                                <th class="border-0 rounded-end">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($dataPelanggan as $index => $item)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->first_name }}</td>
-                                    <td>{{ $item->last_name }}</td>
-                                    <td>{{ $item->birthday }}</td>
-                                    <td>{{ $item->gender }}</td>
-                                    <td>{{ $item->email }}</td>
-                                    <td>{{ $item->phone }}</td>
-                                    <td>
-                                        <a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}"
-                                            class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('pelanggan.destroy', $item->pelanggan_id) }}"
-                                            method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Yakin ingin menghapus data ini?')">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                {{-- Password (opsional) --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="password">Password (Opsional)</label>
+                                    <input type="password"
+                                        class="form-control @error('password') is-invalid @enderror" id="password"
+                                        name="password" placeholder="Isi jika ingin mengganti password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Confirm Password --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="password_confirmation">Konfirmasi Password</label>
+                                    <input type="password" class="form-control" id="password_confirmation"
+                                        name="password_confirmation" placeholder="Ulangi password baru">
+                                </div>
+                            </div>
+
+                            {{-- Buttons --}}
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">Perbarui</button>
+                                <a href="{{ route('admin.user.index') }}" class="btn btn-outline-warning">Batal</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+        {{-- End Main Content --}}
 
+        @include('layouts.admin.footer')
+
+        @include('layouts.admin.js')
 
 
 </body>

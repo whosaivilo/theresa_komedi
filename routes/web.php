@@ -4,6 +4,7 @@ use App\Models\Pelanggan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthControler;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\QuestionController;
@@ -64,3 +65,7 @@ Route::get('/guest', [GuestController::class, 'index'])->name('guest.dashboard')
 
 
 Route::resource('pelanggan', PelangganController::class);
+
+Route::prefix('admin')->group(function () {
+    Route::resource('user', UserController::class)->names('admin.user');
+});
