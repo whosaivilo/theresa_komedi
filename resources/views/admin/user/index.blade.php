@@ -1,62 +1,6 @@
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!-- Primary Meta Tags -->
-    <title>Data User</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta name="author" content="Themesberg">
-    <meta name="description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, themesberg, themesberg dashboard, themesberg admin dashboard" />
-    <link rel="canonical" href="https://themesberg.com/product/admin-dashboard/volt-premium-bootstrap-5-dashboard">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://demo.themesberg.com/volt-pro">
-    <meta property="og:title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta property="og:description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta property="og:image"
-        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/volt-pro-bootstrap-5-dashboard/volt-pro-preview.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://demo.themesberg.com/volt-pro">
-    <meta property="twitter:title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta property="twitter:description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta property="twitter:image"
-        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/volt-pro-bootstrap-5-dashboard/volt-pro-preview.jpg">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('assets-admin') }}/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="{{ asset('assets-admin') }}/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ asset('assets-admin') }}/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="{{ asset('assets-admin') }}/img/favicon/site.webmanifest">
-    <link rel="mask-icon" href="{{ asset('assets-admin') }}/img/favicon/safari-pinned-tab.svg" color="#ffffff">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-
-    {{-- Start CSS --}}
-    @include('layouts.admin.css')
-    {{-- End CSS --}}
-
-</head>
-
-<body>
-
-    <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
-
-  @extends('layouts.admin.app')
-
-          {{-- Start Main Content --}}
+@extends('layouts.admin.app')
+@section('content')
+    {{-- Start Main Content --}}
     <div class="py-4">
         <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -91,24 +35,59 @@
     <div class="card border-0 shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
+                <form method="GET" action="{{ route('admin.user.index') }}" class="mb-3">
+                    <div class="row">
+                        {{-- <div class="col-md-2">
+                                <select name="gender" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Gender</option>
+                                    <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female
+                                    </option>
+                                </select>
+                            </div> --}}
+                        {{-- FORM SEARCH --}}
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" id="exampleInputIconRight"
+                                    value="{{ request('search') }}" placeholder="Search" aria-label="Search">
+                                <button type="submit" class="input-group-text">
+                                    <svg class="icon icon-xxs" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                                @if (request('search'))
+                                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}"
+                                        class="btn btn-outline-secondary ml-3" id="clear-search"> Clear</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <table id="table-user" class="table table-centered table-nowrap mb-0 rounded">
                     <thead class="thead-light">
                         <tr>
                             <th class="border-0 rounded-start">#</th>
                             <th class="border-0">Name</th>
                             <th class="border-0">Email</th>
+                            <th class="border-0">Password</th>
                             <th class="border-0 rounded-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($dataUser as $index => $item)
+                        @foreach ($dataUser as $item)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td>{{ ($dataUser->currentPage() - 1) * $dataUser->perPage() + $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
+                                <td>{{ $item->password }}</td>
                                 <td>
-                                    <a href="{{ route('admin.user.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form action="{{ route('admin.user.destroy', $item->id) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('admin.user.edit', $item->id) }}"
+                                        class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="{{ route('admin.user.destroy', $item->id) }}" method="POST"
+                                        class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger"
@@ -119,13 +98,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $dataUser->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>
-
-
-@include('layouts.admin.js')
-
-</body>
-
-</html>
+@endsection

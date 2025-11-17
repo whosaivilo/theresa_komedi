@@ -1,9 +1,8 @@
 <?php
-
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Faker\Factory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,13 +10,19 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        $faker = \Faker\Factory::create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach (range(1, 100) as $index) {
+            DB::table('pelanggan')->insert([
+                'first_name' => $faker->firstName,
+                'last_name'  => $faker->lastName,
+                'birthday'   => $faker->date('Y-m-d', '2005-12-31'),
+                'gender'     => $faker->randomElement(['Male', 'Female', 'Other']),
+                'email'      => $faker->unique()->safeEmail,
+                'phone'      => $faker->phoneNumber,
+            ]);
+        }
     }
 }
