@@ -37,14 +37,14 @@
             <div class="table-responsive">
                 <form method="GET" action="{{ route('admin.user.index') }}" class="mb-3">
                     <div class="row">
-                        {{-- <div class="col-md-2">
+                        <div class="col-md-2">
                                 <select name="gender" class="form-select" onchange="this.form.submit()">
-                                    <option value="">All Gender</option>
-                                    <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                                    <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female
+                                    <option value="">Verified</option>
+                                    {{-- <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option> --}}
+                                    {{-- <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female --}}
                                     </option>
                                 </select>
-                            </div> --}}
+                            </div>
                         {{-- FORM SEARCH --}}
                         <div class="col-md-3">
                             <div class="input-group">
