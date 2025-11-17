@@ -38,15 +38,19 @@
                 <form method="GET" action="{{ route('admin.user.index') }}" class="mb-3">
                     <div class="row">
                         <div class="col-md-2">
-                                <select name="gender" class="form-select" onchange="this.form.submit()">
-                                    <option value="">Verified</option>
-                                    {{-- <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option> --}}
-                                    {{-- <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female --}}
-                                    </option>
-                                </select>
-                            </div>
+                            <label for="verified-select" class="form-label">Status Verifikasi</label>
+                            <select name="verified_status" class="form-select" id="verified-select"
+                                onchange="this.form.submit()">
+                                <option value="">Semua User</option>
+                                <option value="1" {{ request('verified_status') == '1' ? 'selected' : '' }}>Sudah
+                                    Verifikasi</option>
+                                <option value="0" {{ request('verified_status') == '0' ? 'selected' : '' }}>Belum
+                                    Verifikasi</option>
+                            </select>
+                        </div>
                         {{-- FORM SEARCH --}}
                         <div class="col-md-3">
+                             <label for="verified-select" class="form-label">Search</label>
                             <div class="input-group">
                                 <input type="text" name="search" class="form-control" id="exampleInputIconRight"
                                     value="{{ request('search') }}" placeholder="Search" aria-label="Search">
@@ -72,7 +76,7 @@
                             <th class="border-0 rounded-start">#</th>
                             <th class="border-0">Name</th>
                             <th class="border-0">Email</th>
-                            <th class="border-0">Password</th>
+                            <th class="border-0">Status Verifikasi</th>
                             <th class="border-0 rounded-end">Action</th>
                         </tr>
                     </thead>
@@ -82,7 +86,13 @@
                                 <td>{{ ($dataUser->currentPage() - 1) * $dataUser->perPage() + $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
-                                <td>{{ $item->password }}</td>
+                                <td>
+                                    @if ($item->email_verified_at)
+                                        <span class="badge bg-success">Sudah</span>
+                                    @else
+                                        <span class="badge bg-danger">Belum</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('admin.user.edit', $item->id) }}"
                                         class="btn btn-sm btn-warning">Edit</a>

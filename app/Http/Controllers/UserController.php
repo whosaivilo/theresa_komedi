@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-
+        $filterableColumns = [];
         $searchableColumns = ['name', 'email'];
         $data['dataUser'] = User::search($request,$searchableColumns)->paginate(10)->onEachSide(2)->withQueryString();
         return view('admin.user.index', $data);
