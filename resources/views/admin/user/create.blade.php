@@ -62,18 +62,18 @@
 
 
     {{-- Start CSS --}}
-   @include('layouts.admin.css')
+    @include('layouts.admin.css')
 </head>
 
 <body>
 
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
-@include('layouts.admin.sidebar')
+    @include('layouts.admin.sidebar')
 
     <main class="content">
 
-       {{-- Header --}}
+        {{-- Header --}}
         @include('layouts.admin.header')
 
         {{-- Breadcrumb & Title --}}
@@ -118,15 +118,14 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.user.store') }}" method="POST">
+                        <form action="{{ route('admin.user.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mb-4">
                                 {{-- Name --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        class="form-control @error('name') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
                                         id="name" name="name" value="{{ old('name') }}"
                                         placeholder="Enter full name" required>
                                     @error('name')
@@ -137,8 +136,7 @@
                                 {{-- Email --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="email">Email <span class="text-danger">*</span></label>
-                                    <input type="email"
-                                        class="form-control @error('email') is-invalid @enderror"
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
                                         id="email" name="email" value="{{ old('email') }}"
                                         placeholder="Enter email" required>
                                     @error('email')
@@ -150,8 +148,8 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="password">Password <span class="text-danger">*</span></label>
                                     <input type="password"
-                                        class="form-control @error('password') is-invalid @enderror"
-                                        id="password" name="password" placeholder="Enter password" required>
+                                        class="form-control @error('password') is-invalid @enderror" id="password"
+                                        name="password" placeholder="Enter password" required>
                                     @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -159,12 +157,14 @@
 
                                 {{-- Confirm Password --}}
                                 <div class="col-md-6 mb-3">
-                                    <label for="password_confirmation">Confirm Password <span class="text-danger">*</span></label>
-                                    <input type="password"
-                                        class="form-control"
-                                        id="password_confirmation"
-                                        name="password_confirmation"
-                                        placeholder="Confirm password" required>
+                                    <label for="password_confirmation">Confirm Password <span
+                                            class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password_confirmation"
+                                        name="password_confirmation" placeholder="Confirm password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Profile Picture</label>
+                                    <input type="file" name="profile_picture" class="form-control">
                                 </div>
                             </div>
 

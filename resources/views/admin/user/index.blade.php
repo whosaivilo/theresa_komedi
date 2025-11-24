@@ -50,7 +50,7 @@
                         </div>
                         {{-- FORM SEARCH --}}
                         <div class="col-md-3">
-                             <label for="verified-select" class="form-label">Search</label>
+                            <label for="verified-select" class="form-label">Search</label>
                             <div class="input-group">
                                 <input type="text" name="search" class="form-control" id="exampleInputIconRight"
                                     value="{{ request('search') }}" placeholder="Search" aria-label="Search">
@@ -70,10 +70,14 @@
                         </div>
                     </div>
                 </form>
+                <div class="mt-3">
+                    {{ $dataUser->links('pagination::bootstrap-5') }}
+                </div>
                 <table id="table-user" class="table table-centered table-nowrap mb-0 rounded">
                     <thead class="thead-light">
                         <tr>
                             <th class="border-0 rounded-start">#</th>
+                            <th class="border-0">Profile</th>
                             <th class="border-0">Name</th>
                             <th class="border-0">Email</th>
                             <th class="border-0">Status Verifikasi</th>
@@ -84,6 +88,21 @@
                         @foreach ($dataUser as $item)
                             <tr>
                                 <td>{{ ($dataUser->currentPage() - 1) * $dataUser->perPage() + $loop->iteration }}</td>
+                                <td>
+                                    @if ($item->profile_picture)
+                                        @if (filter_var($item->profile_picture, FILTER_VALIDATE_URL))
+                                            {{-- Kalau URL eksternal --}}
+                                            <img src="{{ $item->profile_picture }}" width="50" height="50"
+                                                style="object-fit:cover;border-radius:50%;">
+                                        @else
+                                            {{-- Kalau tersimpan di storage lokal --}}
+                                            <img src="{{ asset('storage/' . $item->profile_picture) }}" width="50"
+                                                height="50" style="object-fit:cover;border-radius:50%;">
+                                        @endif
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
@@ -108,9 +127,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="mt-3">
-                    {{ $dataUser->links('pagination::bootstrap-5') }}
-                </div>
+
             </div>
         </div>
     </div>

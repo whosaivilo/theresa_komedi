@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\MultipleUpload;
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PelangganController extends Controller
 {
@@ -13,10 +15,10 @@ class PelangganController extends Controller
     {
         $filterableColumns = ['gender'];
 
-        $searchableColumns = ['first_name','last_name','email'];
+        $searchableColumns = ['first_name', 'last_name', 'email'];
 
         $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)->search($request, $searchableColumns)
-                                            ->paginate(10)->onEachSide(1)->withQueryString();
+            ->paginate(10)->onEachSide(1)->withQueryString();
         return view('admin.pelanggan.index', $data);
     }
     /**
@@ -32,30 +34,56 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
-        $data['first_name'] = $request->first_name;
-        $data['last_name']  = $request->last_name;
-        $data['birthday']   = $request->birthday;
-        $data['gender']     = $request->gender;
-        $data['email']      = $request->email;
-        $data['phone']      = $request->phone;
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'nullable|string|max:100',
+            'birthday'   => 'nullable|date',
+            'gender'     => 'nullable|in:male,female',
+            'email'      => 'required|email|unique:pelanggans,email',
+            'phone'      => 'nullable|string|max:20',
+            'files.*'    => 'nullable|file|max:2048', // 2MB per file
+        ]);
+        // Simpan Data Pelanggan
+        $pelanggan = Pelanggan::create([
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'] ?? null,
+            'birthday'   => $validated['birthday'] ?? null,
+            'gender'     => $validated['gender'] ?? null,
+            'email'      => $validated['email'],
+            'phone'      => $validated['phone'] ?? null,
+        ]);
 
-        Pelanggan::create($data);
+        // Upload Multiple File jika ada
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('uploads', $filename, 'public');
 
-        // arahkan kembali ke halaman list pelanggan
-        return redirect()->route('pelanggan.create')->with('success', 'Penambahan Data Berhasil!');
+                MultipleUpload::create([
+                    'file'      => $filename,
+                    'ref_table' => 'pelanggan',
+                    'ref_id'    => $pelanggan->pelanggan_id,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $pelanggan = Pelanggan::where('pelanggan_id', $id)->firstOrFail();
+
+        $files = MultipleUpload::where('ref_table', 'pelanggan')
+            ->where('ref_id', $id)
+            ->get();
+
+        return view('admin.pelanggan.show', compact('pelanggan', 'files'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
@@ -76,4 +104,32 @@ class PelangganController extends Controller
     {
         //
     }
+    public function uploadFile(Request $request)
+    {
+        // dd($request->all());
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('uploads', $filename, 'public');
+
+                MultipleUpload::create([
+                    'file'      => $filename,
+                    'ref_table' => $request->ref_table,
+                    'ref_id'    => $request->ref_id,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'File berhasil diupload');
+    }
+    public function deleteFile($id)
+    {
+        $file = MultipleUpload::findOrFail($id);
+
+        Storage::disk('public')->delete('uploads/' . $file->file);
+        $file->delete();
+
+        return back()->with('success', 'File berhasil dihapus');
+    }
+
 }

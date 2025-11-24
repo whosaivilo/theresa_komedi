@@ -85,13 +85,16 @@
                         <tbody>
                             @forelse ($dataPelanggan as $item)
                                 <tr>
-                                    <td>{{ ($dataPelanggan->currentPage() - 1) * $dataPelanggan->perPage() + $loop->iteration }}</td>
+                                    <td>{{ ($dataPelanggan->currentPage() - 1) * $dataPelanggan->perPage() + $loop->iteration }}
+                                    </td>
                                     <td>{{ $item->last_name }}</td>
                                     <td>{{ $item->birthday }}</td>
                                     <td>{{ $item->gender }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->phone }}</td>
                                     <td class="text-center">
+                                        <a href="{{ route('pelanggan.show', $item->pelanggan_id) }}"
+                                            class="btn btn-sm btn-info me-1">Detail</a>
                                         <a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}"
                                             class="btn btn-sm btn-warning me-1">Edit</a>
                                         <form action="{{ route('pelanggan.destroy', $item->pelanggan_id) }}" method="POST"

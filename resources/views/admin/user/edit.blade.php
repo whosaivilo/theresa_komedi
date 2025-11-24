@@ -1,73 +1,21 @@
 <!--
-
 =========================================================
 * Volt Pro - Premium Bootstrap 5 Dashboard
 =========================================================
-
-* Product Page: https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard
-* Copyright 2021 Themesberg (https://www.themesberg.com)
-* License (https://themesberg.com/licensing)
-
-* Designed and coded by https://themesberg.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
-
 -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!-- Primary Meta Tags -->
-    <title>Form Tambah Pelanggan</title>
+    <title>Edit User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta name="author" content="Themesberg">
-    <meta name="description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, themesberg, themesberg dashboard, themesberg admin dashboard" />
-    <link rel="canonical" href="https://themesberg.com/product/admin-dashboard/volt-premium-bootstrap-5-dashboard">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://demo.themesberg.com/volt-pro">
-    <meta property="og:title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta property="og:description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta property="og:image"
-        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/volt-pro-bootstrap-5-dashboard/volt-pro-preview.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://demo.themesberg.com/volt-pro">
-    <meta property="twitter:title" content="Volt Premium Bootstrap Dashboard - Forms">
-    <meta property="twitter:description"
-        content="Volt Pro is a Premium Bootstrap 5 Admin Dashboard featuring over 800 components, 10+ plugins and 20 example pages using Vanilla JS.">
-    <meta property="twitter:image"
-        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/volt-pro-bootstrap-5-dashboard/volt-pro-preview.jpg">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('assets-admin') }}/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="{{ asset('assets-admin') }}/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ asset('assets-admin') }}/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="{{ asset('assets-admin') }}/img/favicon/site.webmanifest">
-    <link rel="mask-icon" href="{{ asset('assets-admin') }}/img/favicon/safari-pinned-tab.svg" color="#ffffff">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-
 
     {{-- Start CSS --}}
     @include('layouts.admin.css')
 </head>
 
 <body>
-
-    <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
     @include('layouts.admin.sidebar')
 
@@ -81,7 +29,7 @@
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                 <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
                     <li class="breadcrumb-item">
-                        <a href="#">
+                        <a href="{{ route('admin.dashboard') }}">
                             <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,13 +39,13 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Tambah User</li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit User</li>
                 </ol>
             </nav>
             <div class="d-flex justify-content-between w-100 flex-wrap">
                 <div class="mb-3 mb-lg-0">
-                    <h1 class="h4">Tambah User</h1>
-                    <p class="mb-0">Form untuk menambahkan data user baru</p>
+                    <h1 class="h4">Edit User</h1>
+                    <p class="mb-0">Form untuk mengubah data user</p>
                 </div>
                 <div>
                     <a href="{{ route('admin.user.index') }}" class="btn btn-primary">
@@ -112,17 +60,20 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
+
                         @if (session('success'))
-                            <div class="alert alert-info">
-                                {!! session('success') !!}
+                            <div class="alert alert-success">
+                                {{ session('success') }}
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
+                        <form action="{{ route('admin.user.update', $user->id) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
                             <div class="row mb-4">
+
                                 {{-- Name --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="name">Name <span class="text-danger">*</span></label>
@@ -145,12 +96,11 @@
                                     @enderror
                                 </div>
 
-                                {{-- Password (opsional) --}}
+                                {{-- Password --}}
                                 <div class="col-md-6 mb-3">
-                                    <label for="password">Password (Opsional)</label>
-                                    <input type="password"
-                                        class="form-control @error('password') is-invalid @enderror" id="password"
-                                        name="password" placeholder="Isi jika ingin mengganti password">
+                                    <label for="password">Password Baru (Opsional)</label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                        id="password" name="password" placeholder="Isi jika ingin mengganti password">
                                     @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -162,25 +112,53 @@
                                     <input type="password" class="form-control" id="password_confirmation"
                                         name="password_confirmation" placeholder="Ulangi password baru">
                                 </div>
+
+                                {{-- Profile Picture --}}
+                                <div class="col-md-12 mb-3">
+                                    <label for="profile_picture">Foto Profil</label>
+                                    <input type="file"
+                                        class="form-control @error('profile_picture') is-invalid @enderror"
+                                        id="profile_picture" name="profile_picture">
+                                    @error('profile_picture')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+
+                                    @if ($user->profile_picture)
+                                        <div class="mt-2">
+                                            <small class="text-muted">Foto saat ini:</small><br>
+
+                                            @if (filter_var($user->profile_picture, FILTER_VALIDATE_URL))
+                                                {{-- Jika URL eksternal --}}
+                                                <img src="{{ $user->profile_picture }}"
+                                                    style="max-height:120px;border-radius:8px;">
+                                            @else
+                                                {{-- Jika file lokal --}}
+                                                <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                                    style="max-height:120px;border-radius:8px;">
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                </div>
+
                             </div>
 
                             {{-- Buttons --}}
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">Perbarui</button>
-                                <a href="{{ route('admin.user.index') }}" class="btn btn-outline-warning">Batal</a>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a href="{{ route('admin.user.index') }}" class="btn btn-outline-secondary">Batal</a>
                             </div>
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- End Main Content --}}
 
         @include('layouts.admin.footer')
-
         @include('layouts.admin.js')
 
-
+    </main>
 </body>
 
 </html>
