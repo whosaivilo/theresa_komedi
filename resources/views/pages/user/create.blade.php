@@ -144,6 +144,25 @@
                                     @enderror
                                 </div>
 
+                                <!-- role -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="role">Role</label>
+                                    <select class="form-select @error('role') is-invalid @enderror" id="role"
+                                        name="role">
+                                        <option value="">-- Role --</option>
+                                        <option value="Super Admin" {{ old('role') == 'Super Admin' ? 'selected' : '' }}>Super Admin
+                                        </option>
+                                        <option value="Pelanggan" {{ old('role') == 'Pelanggan' ? 'selected' : '' }}>
+                                            Pelanggan</option>
+                                        <option value="Mitra" {{ old('role') == 'Mitra' ? 'selected' : '' }}>
+                                            Mitra</option>
+
+                                    </select>
+                                    @error('role')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 {{-- Password --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="password">Password <span class="text-danger">*</span></label>

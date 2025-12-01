@@ -113,6 +113,26 @@
                                         name="password_confirmation" placeholder="Ulangi password baru">
                                 </div>
 
+                                {{-- Role --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="role">Role <span class="text-danger">*</span></label>
+                                    <select name="role" id="role"
+                                        class="form-select @error('role') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Role --</option>
+                                        <option value="Super Admin"
+                                            {{ old('role', $user->role) === 'Super Admin' ? 'selected' : '' }}>Super
+                                            Admin</option>
+                                        <option value="Pelanggan"
+                                            {{ old('role', $user->role) === 'Pelanggan' ? 'selected' : '' }}>Pelanggan
+                                        </option>
+                                        <option value="Mitra"
+                                            {{ old('role', $user->role) === 'Mitra' ? 'selected' : '' }}>Mitra</option>
+                                    </select>
+                                    @error('role')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 {{-- Profile Picture --}}
                                 <div class="col-md-12 mb-3">
                                     <label for="profile_picture">Foto Profil</label>

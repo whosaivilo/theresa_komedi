@@ -17,11 +17,11 @@ class UserController extends Controller
             ->paginate(10)
             ->onEachSide(2)
             ->withQueryString();
-        return view('admin.user.index', $data);
+        return view('pages.user.index', $data);
     }
     public function create()
     {
-        return view('admin.user.create');
+        return view('pages.user.create');
     }
     public function store(Request $request)
     {
@@ -29,6 +29,7 @@ class UserController extends Controller
             'name'            => 'required|string|max:255',
             'email'           => 'required|string|email|max:255|unique:users',
             'password'        => 'required|string|min:8|confirmed',
+            'role'            => 'required|in:Super Admin,Pelanggan,Mitra',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -36,6 +37,7 @@ class UserController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'role'     => $request->role,
         ];
 
         if ($request->hasFile('profile_picture')) {
@@ -49,8 +51,9 @@ class UserController extends Controller
     }
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        return view('admin.user.edit', compact('user'));
+        $user  = User::findOrFail($id);
+        $roles = ['Super Admin', 'Pelanggan', 'Mitra'];
+        return view('pages.user.edit', compact('user', 'roles'));
     }
     public function update(Request $request, $id)
     {
@@ -59,13 +62,21 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'            => 'required|string|max:255',
             'email'           => 'required|email|unique:users,email,' . $id,
+            'role'            => 'required|in:Super Admin,Pelanggan,Mitra',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+            $validated['password'] = Hash::make($request->password);
+        }
 
         if ($request->hasFile('profile_picture')) {
 
             // hapus foto lama
-            if ($user->profile_picture) {
+            if ($user->profile_picture && ! filter_var($user->profile_picture, FILTER_VALIDATE_URL)) {
                 Storage::disk('public')->delete($user->profile_picture);
             }
 
@@ -91,5 +102,16 @@ class UserController extends Controller
 
         return redirect()->route('admin.user.index')
             ->with('success', 'User berhasil dihapus!');
+    }
+    public function toggleVerification($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->email_verified_at = $user->email_verified_at ? null : now();
+        $user->save();
+
+        return redirect()
+            ->route('admin.user.index')
+            ->with('success', 'Status verifikasi user diperbarui.');
     }
 }

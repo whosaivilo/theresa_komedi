@@ -38,14 +38,14 @@
                 <form method="GET" action="{{ route('admin.user.index') }}" class="mb-3">
                     <div class="row">
                         <div class="col-md-2">
-                            <label for="verified-select" class="form-label">Status Verifikasi</label>
-                            <select name="verified_status" class="form-select" id="verified-select"
-                                onchange="this.form.submit()">
-                                <option value="">Semua User</option>
-                                <option value="1" {{ request('verified_status') == '1' ? 'selected' : '' }}>Sudah
-                                    Verifikasi</option>
-                                <option value="0" {{ request('verified_status') == '0' ? 'selected' : '' }}>Belum
-                                    Verifikasi</option>
+                            <label class="form-label">Role</label>
+                            <select name="role" class="form-select" onchange="this.form.submit()">
+                                <option value="">Semua Role</option>
+                                <option value="Super Admin" {{ request('role') == 'Super Admin' ? 'selected' : '' }}>Super
+                                    Admin</option>
+                                <option value="Mitra" {{ request('role') == 'Mitra' ? 'selected' : '' }}>Mitra</option>
+                                <option value="Pelanggan" {{ request('role') == 'Pelanggan' ? 'selected' : '' }}>Pelanggan
+                                </option>
                             </select>
                         </div>
                         {{-- FORM SEARCH --}}
@@ -80,7 +80,7 @@
                             <th class="border-0">Profile</th>
                             <th class="border-0">Name</th>
                             <th class="border-0">Email</th>
-                            <th class="border-0">Status Verifikasi</th>
+                            <th class="border-0">Role</th>
                             <th class="border-0 rounded-end">Action</th>
                         </tr>
                     </thead>
@@ -106,10 +106,12 @@
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
-                                    @if ($item->email_verified_at)
-                                        <span class="badge bg-success">Sudah</span>
+                                    @if ($item->role === 'Super Admin')
+                                        <span class="badge bg-danger">Super Admin</span>
+                                    @elseif ($item->role === 'Mitra')
+                                        <span class="badge bg-warning text-dark">Mitra</span>
                                     @else
-                                        <span class="badge bg-danger">Belum</span>
+                                        <span class="badge bg-success">Pelanggan</span>
                                     @endif
                                 </td>
                                 <td>

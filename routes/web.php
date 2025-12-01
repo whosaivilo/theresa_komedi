@@ -1,18 +1,14 @@
 <?php
 
-use App\Http\Controllers\AuthControler;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GuestController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/pcr', function () {
     return 'Selamat Datang di Website Kampus PCR!'; //tidak kemana-mana, hanya menampilkan teks
 });
@@ -32,38 +28,41 @@ Route::get('/about', function () {
     return view('halaman-about');
 });
 
-Route::get('/home', [HomeController::class, 'index']);
-
 Route::get('/pegawai', [PegawaiController::class, 'index']);
 
 Route::post('question/store', [QuestionController::class, 'store'])
     ->name('question.store');
 
-// Route::get('/auth',[AuthControler::class, 'index']);
-// Route::post('/auth/login', [AuthControler::class, 'login']);
+// Auth
+Route::get('/', [AuthController::class, 'index'])->name('auth');
+Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('auth.logout');
 
-//Menampilkan form login
-Route::get('/auth', [AuthControler::class, 'index'])->name('auth');
-//Memproses form login (POST)
-Route::post('/auth/login', [AuthControler::class, 'login'])->name('auth.login');
-//Menampilkan form register (GET)
-Route::get('/auth/register', [AuthControler::class, 'daftar'])->name('auth.register');
-//Memproses form register (POST)
-Route::post('/auth/register', [AuthControler::class, 'register'])->name('auth.register.post');
+Route::get('/auth/register', [AuthController::class, 'daftar'])->name('auth.register');
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register.post');
 
-//Dashboard untuk admin
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-//Dashboard untuk guest
-Route::get('/guest', [GuestController::class, 'index'])->name('guest.dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('admin.dashboard');
 
 Route::resource('pelanggan', PelangganController::class);
 
 Route::prefix('admin')->group(function () {
     Route::resource('user', UserController::class)->names('admin.user');
 });
+
 Route::post('/pelanggan/upload-file', [PelangganController::class, 'uploadFile'])
     ->name('pelanggan.uploadFile');
 
-    Route::delete('/pelanggan/file/{id}', [PelangganController::class, 'deleteFile'])
+Route::delete('/pelanggan/file/{id}', [PelangganController::class, 'deleteFile'])
     ->name('pelanggan.deleteFile');
+
+Route::group(['middleware' => ['checkrole:Super Admin']], function () {
+
+    Route::get('user', [UserController::class, 'index'])
+        ->name('users.list');
+    // // Logout
+
+    // tambah route lainnya di sini
+});
+
